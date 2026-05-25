@@ -15,4 +15,9 @@ public class KeyValueStore {
     public String get(String key) {
         return store.get(key);
     }
+
+    @Override
+    public String toString() {
+        return store.toString();
+    }
 }
