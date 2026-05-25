@@ -16,6 +16,11 @@ public class WebServerController {
         return "Hello world";
     }
 
+    @GetMapping("/kv")
+    public String getKVStore() {
+        return store.toString();
+    }
+
     @PutMapping("/kv/{key}")
     public ResponseEntity<Void> put(
             @PathVariable String key,
