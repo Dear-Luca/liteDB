@@ -31,10 +31,16 @@ public class WebServerController {
     }
 
     @GetMapping("/kv/{key}")
-    public String get(
+    public ResponseEntity<String> get(
             @PathVariable String key
     ) {
-        return store.get(key);
+        String value = store.get(key);
+
+        if (value == null) {
+            return ResponseEntity.status(404).body("Key not found");
+        }
+
+        return ResponseEntity.ok(value);
     }
 
 }
