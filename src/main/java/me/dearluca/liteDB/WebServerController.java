@@ -44,4 +44,14 @@ public class WebServerController {
         return ResponseEntity.ok(value);
     }
 
+    @DeleteMapping("/kv/{key}")
+    public ResponseEntity<Void> delete(
+            @PathVariable String key
+    ) {
+        if (store.get(key) == null) {
+            return ResponseEntity.notFound().build();
+        }
+        store.delete(key);
+        return ResponseEntity.ok().build();
+    }
 }

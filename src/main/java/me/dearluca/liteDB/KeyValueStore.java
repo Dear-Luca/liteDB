@@ -16,6 +16,10 @@ public class KeyValueStore {
         return store.get(key);
     }
 
+    public void delete(String key) {
+        store.remove(key);
+    }
+
     @Override
     public String toString() {
         return store.toString();
