@@ -3,6 +3,8 @@ package me.dearluca.liteDB;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 public class WebServerController {
     private final KeyValueStore store;
@@ -17,8 +19,8 @@ public class WebServerController {
     }
 
     @GetMapping("/kv")
-    public String getKVStore() {
-        return store.toString();
+    public Map<String, StoredValue> getKVStore() {
+        return store.getAll();
     }
 
     @PutMapping("/kv/{key}")

@@ -2,6 +2,7 @@ package me.dearluca.liteDB;
 
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -18,6 +19,10 @@ public class KeyValueStore {
 
     public void delete(String key) {
         store.remove(key);
+    }
+
+    public Map<String, StoredValue> getAll() {
+        return Map.copyOf(store);
     }
 
     @Override
