@@ -1,4 +1,4 @@
-package me.dearluca.liteDB;
+package me.dearluca.liteDB.cluster;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

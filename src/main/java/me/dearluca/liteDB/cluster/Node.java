@@ -1,4 +1,4 @@
-package me.dearluca.liteDB;
+package me.dearluca.liteDB.cluster;
 
 public record Node(
         String id,

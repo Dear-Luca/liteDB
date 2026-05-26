@@ -1,4 +1,4 @@
-package me.dearluca.liteDB;
+package me.dearluca.liteDB.store;
 
 import org.springframework.stereotype.Service;
 

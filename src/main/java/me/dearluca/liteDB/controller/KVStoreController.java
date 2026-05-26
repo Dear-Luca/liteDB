@@ -1,21 +1,18 @@
-package me.dearluca.liteDB;
+package me.dearluca.liteDB.controller;
 
+import me.dearluca.liteDB.store.KeyValueStore;
+import me.dearluca.liteDB.store.StoredValue;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
-public class WebServerController {
+public class KVStoreController {
     private final KeyValueStore store;
 
-    public WebServerController(KeyValueStore store) {
+    public KVStoreController(KeyValueStore store) {
         this.store = store;
-    }
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello world";
     }
 
     @GetMapping("/kv")
