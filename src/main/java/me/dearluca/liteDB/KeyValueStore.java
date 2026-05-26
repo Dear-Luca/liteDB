@@ -22,6 +22,16 @@ public class KeyValueStore {
 
     @Override
     public String toString() {
-        return store.toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append("KeyValueStore {\n");
+        store.forEach((key, value) ->
+                sb.append("  ")
+                        .append(key)
+                        .append(" -> ")
+                        .append(value)
+                        .append("\n")
+        );
+        sb.append("}");
+        return sb.toString();
     }
 }
