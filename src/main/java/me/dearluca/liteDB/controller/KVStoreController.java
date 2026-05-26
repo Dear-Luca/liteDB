@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
+@RequestMapping("/kv")
 public class KVStoreController {
     private final KeyValueStore store;
 
@@ -15,12 +16,12 @@ public class KVStoreController {
         this.store = store;
     }
 
-    @GetMapping("/kv")
+    @GetMapping
     public Map<String, StoredValue> getKVStore() {
         return store.getAll();
     }
 
-    @PutMapping("/kv/{key}")
+    @PutMapping("/{key}")
     public ResponseEntity<Void> put(
             @PathVariable String key,
             @RequestBody String value
@@ -29,7 +30,7 @@ public class KVStoreController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/kv/{key}")
+    @GetMapping("/{key}")
     public ResponseEntity<StoredValue> get(
             @PathVariable String key
     ) {
@@ -42,7 +43,7 @@ public class KVStoreController {
         return ResponseEntity.ok(value);
     }
 
-    @DeleteMapping("/kv/{key}")
+    @DeleteMapping("/{key}")
     public ResponseEntity<Void> delete(
             @PathVariable String key
     ) {

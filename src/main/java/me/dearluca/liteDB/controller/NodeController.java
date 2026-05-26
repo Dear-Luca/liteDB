@@ -2,9 +2,11 @@ package me.dearluca.liteDB.controller;
 
 import me.dearluca.liteDB.cluster.NodeProperties;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/node")
 public class NodeController {
     private final NodeProperties nodeProperties;
 
@@ -12,7 +14,7 @@ public class NodeController {
         this.nodeProperties = nodeProperties;
     }
 
-    @GetMapping("/node/info")
+    @GetMapping("/info")
     public NodeProperties info() {
         return nodeProperties;
     }
