@@ -6,7 +6,7 @@ import java.util.List;
 
 @ConfigurationProperties(prefix = "litedb")
 public record NodeProperties(
-        String host,
+        String nodeId,
         int port,
         List<Node> nodes
 ){}

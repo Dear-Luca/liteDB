@@ -3,14 +3,14 @@ server:
 
 litedb:
   node-id: node1
-  grpc-port: 9090
-  cluster-nodes:
+  port: 9090
+  nodes:
     - id: node1
       host: localhost
-      grpc-port: 9090
+      port: 9090
     - id: node2
       host: localhost
-      grpc-port: 9091
+      port: 9091
     - id: node3
       host: localhost
-      grpc-port: 9092
+      port: 9092
