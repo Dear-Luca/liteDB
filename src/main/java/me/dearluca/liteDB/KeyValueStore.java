@@ -6,13 +6,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class KeyValueStore {
-    private final ConcurrentHashMap<String, String> store = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, StoredValue> store = new ConcurrentHashMap<>();
 
     public void put(String key, String value) {
-        store.put(key, value);
+        store.put(key, new StoredValue(value, System.currentTimeMillis()));
     }
 
-    public String get(String key) {
+    public StoredValue get(String key) {
         return store.get(key);
     }
 

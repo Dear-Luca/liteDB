@@ -1,6 +1,5 @@
 package me.dearluca.liteDB;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +31,13 @@ public class WebServerController {
     }
 
     @GetMapping("/kv/{key}")
-    public ResponseEntity<String> get(
+    public ResponseEntity<StoredValue> get(
             @PathVariable String key
     ) {
-        String value = store.get(key);
+        StoredValue value = store.get(key);
 
         if (value == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Key not found");
+            return ResponseEntity.notFound().build();
         }
 
         return ResponseEntity.ok(value);
