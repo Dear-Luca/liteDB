@@ -7,18 +7,24 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 public class WebServerControllerTests {
 
-    private static final String endPoint =  "/kv/user:1";
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     void testGetNotFound() throws Exception {
-        mockMvc.perform(get(endPoint)).andExpect(status().isNotFound());
+        mockMvc.perform(get("/kv/user:1")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testPut() throws Exception {
+        mockMvc.perform(put("/kv/user:2").content("Mario"))
+                .andExpect(status().isOk());
     }
 }
