@@ -1,6 +1,7 @@
 package me.dearluca.liteDB.controller;
 
 import me.dearluca.liteDB.cluster.NodeProperties;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +16,7 @@ public class NodeController {
     }
 
     @GetMapping("/info")
-    public NodeProperties info() {
-        return nodeProperties;
+    public ResponseEntity<NodeProperties> info() {
+        return ResponseEntity.ok(this.nodeProperties);
     }
 }
