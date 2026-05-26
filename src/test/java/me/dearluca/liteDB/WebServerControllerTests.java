@@ -7,8 +7,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -38,5 +37,20 @@ public class WebServerControllerTests {
         mockMvc.perform(get("/kv/user:3"))
                 .andExpect(status().isOk())
                 .andExpect(result -> content().string("John"));
+    }
+
+    @Test
+    void testDeleteNotFound() throws Exception {
+        mockMvc.perform(delete("/kv/user:1")).andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testPutThenDelete() throws Exception {
+        mockMvc.perform(put("/kv/user:4")
+                        .content("John"))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(delete("/kv/user:4"))
+                .andExpect(status().isOk());
     }
 }
