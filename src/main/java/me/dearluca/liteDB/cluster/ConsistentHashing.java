@@ -1,7 +1,10 @@
 package me.dearluca.liteDB.cluster;
 
+import org.springframework.stereotype.Service;
+
 import java.util.*;
 
+@Service
 public class ConsistentHashing {
 
     private final SortedMap<Long, Node> ring = new TreeMap<>();
