@@ -41,11 +41,12 @@ public class NodeController {
         return ResponseEntity.ok(res);
     }
 
-    @GetMapping("/replicas/{key}")
+    @GetMapping("/replicas/{key}/{replicationFactor}")
     public ResponseEntity<List<Node>> replicas(
-            @PathVariable String key
+            @PathVariable String key,
+            @PathVariable int replicationFactor
     ) {
-        var res = hashRing.getReplicaNodes(key, nodeProperties.nodes().size());
+        var res = hashRing.getReplicaNodes(key, replicationFactor);
         return ResponseEntity.ok(res);
     }
 
