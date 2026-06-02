@@ -2,6 +2,10 @@ package me.dearluca.liteDB.cluster;
 
 import org.springframework.stereotype.Service;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Service
@@ -13,6 +17,10 @@ public class ConsistentHashing {
         for (Node node : nodeProperties.nodes()) {
             ring.put(hash(node.id()), node);
         }
+    }
+
+    public Map<Long, Node> getRing() {
+        return Map.copyOf(ring);
     }
 
     public Node getPrimaryNode(String key) {
@@ -68,6 +76,13 @@ public class ConsistentHashing {
     }
 
     private long hash(String key) {
-        return Integer.toUnsignedLong(key.hashCode());
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] bytes = digest.digest(key.getBytes(StandardCharsets.UTF_8));
+
+            return ByteBuffer.wrap(bytes).getLong() & Long.MAX_VALUE;
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Could not compute hash", e);
+        }
     }
 }
