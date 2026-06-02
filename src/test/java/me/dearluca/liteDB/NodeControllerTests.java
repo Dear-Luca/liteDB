@@ -21,4 +21,23 @@ public class NodeControllerTests {
                 .andExpect(status().isOk());
     }
 
+    @Test
+    void testGetHashRing() throws Exception {
+        mockMvc.perform(get("/node/ring")).andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetPrimaryNode() throws Exception {
+        mockMvc.perform(get("/node/primary/user:1")).andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetReplicas() throws Exception {
+        mockMvc.perform(get("/node/replicas/user:1/2")).andExpect(status().isOk());
+    }
+
+    @Test
+    void testGetRing() throws Exception {
+        mockMvc.perform(get("/node/ring")).andExpect(status().isOk());
+    }
 }
