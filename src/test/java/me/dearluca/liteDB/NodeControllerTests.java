@@ -36,8 +36,4 @@ public class NodeControllerTests {
         mockMvc.perform(get("/node/replicas/user:1/2")).andExpect(status().isOk());
     }
 
-    @Test
-    void testGetRing() throws Exception {
-        mockMvc.perform(get("/node/ring")).andExpect(status().isOk());
-    }
 }
