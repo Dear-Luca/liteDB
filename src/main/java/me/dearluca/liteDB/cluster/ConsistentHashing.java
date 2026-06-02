@@ -12,7 +12,6 @@ import java.util.*;
 public class ConsistentHashing {
 
     private final SortedMap<Long, Node> ring = new TreeMap<>();
-    private final String hashAlgorithm = "SHA-256";
 
     public ConsistentHashing(NodeProperties nodeProperties) {
         for (Node node : nodeProperties.nodes()) {
@@ -78,6 +77,7 @@ public class ConsistentHashing {
 
     private long hash(String key) {
         try {
+            String hashAlgorithm = "SHA-256";
             MessageDigest digest = MessageDigest.getInstance(hashAlgorithm);
             byte[] bytes = digest.digest(key.getBytes(StandardCharsets.UTF_8));
 
