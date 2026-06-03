@@ -13,6 +13,16 @@ public class KeyValueStore {
         store.put(key, new StoredValue(value, System.currentTimeMillis()));
     }
 
+    public void putReplica(String key, String value, long timestamp) {
+        store.compute(key, (k, existing) -> {
+            if (existing == null || timestamp >= existing.timestamp()) {
+                return new StoredValue(value, timestamp);
+            }
+
+            return existing;
+        });
+    }
+
     public StoredValue get(String key) {
         return store.get(key);
     }
