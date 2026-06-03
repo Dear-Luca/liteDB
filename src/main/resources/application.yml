@@ -1,16 +1,16 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
 
 litedb:
-  node-id: node1
-  port: 9090
+  node-id: ${NODE_ID:node1}
+  port: ${NODE_PORT:9090}
   nodes:
     - id: node1
-      host: localhost
+      host: node1
       port: 9090
     - id: node2
-      host: localhost
-      port: 9091
+      host: node2
+      port: 9090
     - id: node3
-      host: localhost
-      port: 9092
+      host: node3
+      port: 9090
