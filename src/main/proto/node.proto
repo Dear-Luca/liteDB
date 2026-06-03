@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+option java_package = "me.dearluca.liteDB.grpc";
+option java_multiple_files = true;
+
+service NodeService {
+  rpc ReplicatePut(ReplicatePutRequest) returns (ReplicateResponse);
+}
+
+message ReplicatePutRequest {
+  string key = 1;
+  string value = 2;
+  int64 timestamp = 3;
+}
+
+message ReplicateResponse {
+  bool success = 1;
+  string message = 2;
+}
