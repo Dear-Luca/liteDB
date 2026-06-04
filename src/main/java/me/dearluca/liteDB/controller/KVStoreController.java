@@ -1,5 +1,9 @@
 package me.dearluca.liteDB.controller;
 
+import me.dearluca.liteDB.cluster.ConsistentHashing;
+import me.dearluca.liteDB.cluster.Node;
+import me.dearluca.liteDB.cluster.NodeProperties;
+import me.dearluca.liteDB.grpc.NodeClient;
 import me.dearluca.liteDB.store.KeyValueStore;
 import me.dearluca.liteDB.store.StoredValue;
 import org.springframework.http.ResponseEntity;
@@ -11,9 +15,15 @@ import java.util.Map;
 @RequestMapping("/kv")
 public class KVStoreController {
     private final KeyValueStore store;
+    private final ConsistentHashing hashRing;
+    private final NodeProperties nodeProperties;
+    private final NodeClient replicationClient;
 
-    public KVStoreController(KeyValueStore store) {
+    public KVStoreController(KeyValueStore store, ConsistentHashing hashRing, NodeProperties nodeProperties, NodeClient replicationClient) {
         this.store = store;
+        this.hashRing = hashRing;
+        this.nodeProperties = nodeProperties;
+        this.replicationClient = replicationClient;
     }
 
     @GetMapping
@@ -26,7 +36,15 @@ public class KVStoreController {
             @PathVariable String key,
             @RequestBody String value
     ) {
-        store.put(key, value);
+        long timestamp = System.currentTimeMillis();
+        for (Node node: hashRing.getReplicaNodes(key, 2)) {
+            if (node.id().equals(nodeProperties.nodeId())) {
+                store.putReplica(key, value, timestamp);
+            } else {
+                replicationClient.replicatePut(node, key, value, timestamp);
+            }
+        }
+
         return ResponseEntity.ok().build();
     }
 

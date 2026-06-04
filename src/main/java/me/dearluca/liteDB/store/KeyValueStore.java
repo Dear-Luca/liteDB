@@ -9,10 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KeyValueStore {
     private final ConcurrentHashMap<String, StoredValue> store = new ConcurrentHashMap<>();
 
-    public void put(String key, String value) {
-        store.put(key, new StoredValue(value, System.currentTimeMillis()));
-    }
-
     public void putReplica(String key, String value, long timestamp) {
         store.compute(key, (k, existing) -> {
             if (existing == null || timestamp >= existing.timestamp()) {
