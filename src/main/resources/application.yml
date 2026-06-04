@@ -8,7 +8,7 @@ spring:
 
 litedb:
   node-id: ${NODE_ID:node1}
-  port: ${NODE_PORT:9090}
+  grpc-port: ${GRPC_PORT:9090}
   nodes:
     - id: node1
       host: node1
