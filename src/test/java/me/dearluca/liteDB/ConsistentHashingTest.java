@@ -25,6 +25,7 @@ public class ConsistentHashingTest {
                 new NodeProperties(
                         "node1",
                         9090,
+                        2,
                         nodes
                 );
         hashRing = new ConsistentHashing(properties);
