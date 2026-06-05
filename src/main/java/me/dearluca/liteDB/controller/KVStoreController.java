@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * Controller for managing the key-value store.
+ */
 @RestController
 @RequestMapping("/kv")
 public class KVStoreController {
@@ -19,6 +22,13 @@ public class KVStoreController {
     private final NodeProperties nodeProperties;
     private final NodeClient replicationClient;
 
+    /**
+     * Constructor for KVStoreController. 
+     * @param store the key-value store instance to manage.
+     * @param hashRing the consistent hashing ring for node management.
+     * @param nodeProperties the properties of the current node.
+     * @param replicationClient the client for replicating data to other nodes.
+     */
     public KVStoreController(KeyValueStore store, ConsistentHashing hashRing, NodeProperties nodeProperties, NodeClient replicationClient) {
         this.store = store;
         this.hashRing = hashRing;
@@ -26,11 +36,21 @@ public class KVStoreController {
         this.replicationClient = replicationClient;
     }
 
+    /**
+     * Retrieves all key-value pairs from the store.
+     * @return a map containing all key-value pairs.
+     */
     @GetMapping
     public Map<String, StoredValue> getKVStore() {
         return store.getAll();
     }
 
+    /**
+     * Inserts or updates a key-value pair in the store.
+     * @param key the key for the entry.
+     * @param value the value for the entry.
+     * @return a response entity indicating the outcome of the operation.
+     */
     @PutMapping("/{key}")
     public ResponseEntity<Void> put(
             @PathVariable String key,
@@ -48,6 +68,11 @@ public class KVStoreController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Retrieves a value for a given key from the store.
+     * @param key the key for the entry.
+     * @return a response entity containing the value or a 404 Not Found error.
+     */
     @GetMapping("/{key}")
     public ResponseEntity<StoredValue> get(
             @PathVariable String key
@@ -61,6 +86,11 @@ public class KVStoreController {
         return ResponseEntity.ok(value);
     }
 
+    /**
+     * Deletes a key-value pair from the store.
+     * @param key the key for the entry to delete.
+     * @return a response entity indicating the outcome of the operation.
+     */
     @DeleteMapping("/{key}")
     public ResponseEntity<Void> delete(
             @PathVariable String key
