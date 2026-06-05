@@ -57,7 +57,7 @@ public class KVStoreController {
             @RequestBody String value
     ) {
         long timestamp = System.currentTimeMillis();
-        for (Node node: hashRing.getReplicaNodes(key, 2)) {
+        for (Node node: hashRing.getReplicaNodes(key, nodeProperties.replicationFactor())) {
             if (node.id().equals(nodeProperties.nodeId())) {
                 store.putReplica(key, value, timestamp);
             } else {

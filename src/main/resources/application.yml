@@ -9,6 +9,7 @@ spring:
 litedb:
   node-id: ${NODE_ID:node1}
   grpc-port: ${GRPC_PORT:9090}
+  replication-factor: ${REPLICATION_FACTOR:2}
   nodes:
     - id: node1
       host: node1
