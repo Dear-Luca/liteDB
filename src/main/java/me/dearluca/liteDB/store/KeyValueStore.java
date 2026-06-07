@@ -12,13 +12,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KeyValueStore {
     private final ConcurrentHashMap<String, StoredValue> store = new ConcurrentHashMap<>();
 
+
     /**
      * Puts a key-value pair into the store with a timestamp. If the key already exists, it will only be updated if the new timestamp is greater than or equal to the existing one.
      * @param key the key to store
      * @param value the value to store
      * @param timestamp the timestamp of the operation
      */
-    public void putReplica(String key, String value, long timestamp) {
+    public void put(String key, String value, long timestamp) {
         store.compute(key, (k, existing) -> {
             if (existing == null || timestamp >= existing.timestamp()) {
                 return new StoredValue(value, timestamp);
