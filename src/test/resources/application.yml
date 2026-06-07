@@ -1,0 +1,9 @@
+litedb:
+  node-id: node1
+  grpc-port: 9090
+  replication-factor: 2
+  replication-enabled: false
+  nodes:
+    - id: node1
+      host: localhost
+      port: 9090

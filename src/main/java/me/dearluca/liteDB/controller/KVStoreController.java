@@ -57,14 +57,17 @@ public class KVStoreController {
             @RequestBody String value
     ) {
         long timestamp = System.currentTimeMillis();
+        if (!nodeProperties.replicationEnabled()) {
+            store.put(key, value, timestamp);
+            return ResponseEntity.ok().build();
+        }
         for (Node node: hashRing.getReplicaNodes(key, nodeProperties.replicationFactor())) {
             if (node.id().equals(nodeProperties.nodeId())) {
-                store.putReplica(key, value, timestamp);
+                store.put(key, value, timestamp);
             } else {
                 replicationClient.replicatePut(node, key, value, timestamp);
             }
         }
-
         return ResponseEntity.ok().build();
     }
 
@@ -77,6 +80,24 @@ public class KVStoreController {
     public ResponseEntity<StoredValue> get(
             @PathVariable String key
     ) {
+        /*
+        var nodes = hashRing.getReplicaNodes(key, nodeProperties.replicationFactor());
+
+        for (Node node: nodes) {
+            StoredValue value;
+            if (node.id().equals(nodeProperties.nodeId())) {
+                value = store.get(key);
+            } else {
+                value = replicationClient.getValue(node, key);
+            }
+
+            if (value != null) {
+                return ResponseEntity.ok(value);
+            }
+        }
+
+        return ResponseEntity.notFound().build();
+         */
         StoredValue value = store.get(key);
 
         if (value == null) {
