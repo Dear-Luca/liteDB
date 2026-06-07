@@ -5,6 +5,7 @@ option java_multiple_files = true;
 
 service NodeService {
   rpc ReplicatePut(ReplicatePutRequest) returns (ReplicateResponse);
+  rpc GetValue(GetValueRequest) returns (GetValueResponse);
 }
 
 message ReplicatePutRequest {
@@ -16,4 +17,15 @@ message ReplicatePutRequest {
 message ReplicateResponse {
   bool success = 1;
   string message = 2;
+}
+
+message GetValueRequest {
+  string key = 1;
+}
+
+message GetValueResponse {
+  bool success = 1;
+  string value = 2;
+  int64 timestamp = 3;
+  string message = 4;
 }

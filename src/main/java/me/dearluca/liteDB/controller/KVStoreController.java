@@ -80,9 +80,7 @@ public class KVStoreController {
     public ResponseEntity<StoredValue> get(
             @PathVariable String key
     ) {
-        /*
         var nodes = hashRing.getReplicaNodes(key, nodeProperties.replicationFactor());
-
         for (Node node: nodes) {
             StoredValue value;
             if (node.id().equals(nodeProperties.nodeId())) {
@@ -90,21 +88,11 @@ public class KVStoreController {
             } else {
                 value = replicationClient.getValue(node, key);
             }
-
             if (value != null) {
                 return ResponseEntity.ok(value);
             }
         }
-
         return ResponseEntity.notFound().build();
-         */
-        StoredValue value = store.get(key);
-
-        if (value == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(value);
     }
 
     /**
