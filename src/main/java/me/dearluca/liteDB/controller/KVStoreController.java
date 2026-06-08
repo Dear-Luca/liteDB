@@ -80,22 +80,22 @@ public class KVStoreController {
     public ResponseEntity<StoredValue> get(
             @PathVariable String key
     ) {
-        var nodes = hashRing.getReplicaNodes(key, nodeProperties.replicationFactor());
-        for (Node node : nodes) {
-            try {
-                StoredValue value;
-                if (node.id().equals(nodeProperties.nodeId())) {
-                    value = store.get(key);
-                } else {
-                    value = replicationClient.getValue(node, key);
-                }
-                if (value != null) {
-                    return ResponseEntity.ok(value);
-                }
-            } catch (Exception e) {
-                System.out.println("Failed to get value from " + node.id() + ": " + e.getMessage());
+        var replicas = hashRing.getReplicaNodes(key, nodeProperties.replicationFactor());
+        StoredValue local = store.get(key);
+        System.out.println("ID " + nodeProperties.nodeId());
+        if (local != null) {
+            return ResponseEntity.ok(local);
+        }
+        for (Node node : replicas) {
+            if (node.id().equals(nodeProperties.nodeId())) {
+                continue;
+            }
+            StoredValue remote = replicationClient.getValue(node, key);
+            if (remote != null) {
+                return ResponseEntity.ok(remote);
             }
         }
+        System.out.println("Value not found");
         return ResponseEntity.notFound().build();
     }
 
