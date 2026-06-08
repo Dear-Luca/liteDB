@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class NodeClient {
     private static final Logger log = LoggerFactory.getLogger(NodeClient.class);
 
-
     /**
      * Replicates a put operation to another node.
      * @param targetNode the node to replicate to
@@ -82,5 +81,31 @@ public class NodeClient {
         } finally {
             channel.shutdown();
         }
+    }
+
+    public boolean replicateDelete(Node targetNode, String key) {
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress(targetNode.host(), targetNode.port())
+                .usePlaintext()
+                .build();
+        try {
+            NodeServiceGrpc.NodeServiceBlockingStub stub =
+                    NodeServiceGrpc.newBlockingStub(channel);
+
+            DeleteKeyRequest request = DeleteKeyRequest.newBuilder()
+                    .setKey(key)
+                    .build();
+
+            DeleteKeyResponse response = stub.replicateDelete(request);
+
+            if (!response.getSuccess()) {
+                log.error("[GRPC] DELETE: {}", response.getMessage());
+                return false;
+            }
+
+        } finally {
+            channel.shutdown();
+        }
+        return true;
     }
 }

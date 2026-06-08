@@ -88,4 +88,27 @@ public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
 
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void replicateDelete(DeleteKeyRequest request, StreamObserver<DeleteKeyResponse> responseObserver) {
+        log.info("[GRPC]: Node {} received DELETE for key={}", nodeProperties.nodeId(), request.getKey());
+        if (!store.delete(request.getKey())){
+            responseObserver.onNext(
+                    DeleteKeyResponse.newBuilder()
+                            .setSuccess(false)
+                            .setMessage("Delete failed")
+                            .build()
+            );
+            responseObserver.onCompleted();
+            return;
+        }
+
+        responseObserver.onNext(
+            DeleteKeyResponse.newBuilder()
+                .setSuccess(true)
+                .setMessage("Delete completed")
+                .build()
+        );
+        responseObserver.onCompleted();
+    }
 }

@@ -112,12 +112,37 @@ public class KVStoreController {
      * @return a response entity indicating the outcome of the operation.
      */
     @DeleteMapping("/{key}")
-    public ResponseEntity<Void> delete(
-            @PathVariable String key
-    ) {
-        if(!store.delete(key)) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> delete(@PathVariable String key) {
+        if (!nodeProperties.replicationEnabled()) {
+            boolean deleted = store.delete(key);
+            if (!deleted) {
+                return ResponseEntity.notFound().build();
+            }
+            log.info("[LOCAL] DELETE key={} on node={}", key, nodeProperties.nodeId());
+            return ResponseEntity.ok().build();
         }
-        return ResponseEntity.ok().build();
+
+        boolean deletedAtLeastOnce = false;
+
+        for (Node node : hashRing.getReplicaNodes(key, nodeProperties.replicationFactor())) {
+            try {
+                if (node.id().equals(nodeProperties.nodeId())) {
+                    boolean deleted = store.delete(key);
+                    if (deleted) {
+                        deletedAtLeastOnce = true;
+                        log.info("[LOCAL] DELETE key={} on node={}", key, nodeProperties.nodeId());
+                    }
+                } else {
+                    boolean deleted = replicationClient.replicateDelete(node, key);
+                    if (deleted) {
+                        deletedAtLeastOnce = true;
+                        log.info("[GRPC] DELETE key={} on node={}", key, node.id());
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("DELETE: Failed to delete key={} from node={}", key, node.id(), e);
+            }
+        }
+        return deletedAtLeastOnce ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
     }
 }
