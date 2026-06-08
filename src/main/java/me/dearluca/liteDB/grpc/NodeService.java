@@ -2,8 +2,11 @@ package me.dearluca.liteDB.grpc;
 
 import io.grpc.stub.StreamObserver;
 import me.dearluca.liteDB.cluster.NodeProperties;
+import me.dearluca.liteDB.controller.KVStoreController;
 import me.dearluca.liteDB.store.KeyValueStore;
 import me.dearluca.liteDB.store.StoredValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.grpc.server.service.GrpcService;
 
 /**
@@ -13,6 +16,8 @@ import org.springframework.grpc.server.service.GrpcService;
 public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
     private final KeyValueStore store;
     private final NodeProperties nodeProperties;
+    private static final Logger log = LoggerFactory.getLogger(NodeService.class);
+
 
     /**
      * Creates a new NodeService with the given KeyValueStore.
@@ -33,12 +38,7 @@ public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
             ReplicatePutRequest request,
             StreamObserver<ReplicateResponse> responseObserver
     ) {
-        System.out.println(
-                "Node " + nodeProperties.nodeId()
-                        + " received PUT for key="
-                        + request.getKey()
-        );
-
+        log.info("[GRPC]: Node {} received PUT for key={}", nodeProperties.nodeId(), request.getKey());
         store.put(
                 request.getKey(),
                 request.getValue(),
@@ -64,12 +64,7 @@ public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
             GetValueRequest request,
             StreamObserver<GetValueResponse> responseObserver
     ) {
-        System.out.println(
-                "Node " + nodeProperties.nodeId()
-                        + " received GET for key="
-                        + request.getKey()
-        );
-
+        log.info("[GRPC]: Node {} received GET for key={}", nodeProperties.nodeId(), request.getKey());
         StoredValue storedValue = store.get(request.getKey());
         if (storedValue == null) {
             responseObserver.onNext(

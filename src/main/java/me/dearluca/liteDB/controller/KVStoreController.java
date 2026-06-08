@@ -6,6 +6,8 @@ import me.dearluca.liteDB.cluster.NodeProperties;
 import me.dearluca.liteDB.grpc.NodeClient;
 import me.dearluca.liteDB.store.KeyValueStore;
 import me.dearluca.liteDB.store.StoredValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ public class KVStoreController {
     private final ConsistentHashing hashRing;
     private final NodeProperties nodeProperties;
     private final NodeClient replicationClient;
+    private static final Logger log = LoggerFactory.getLogger(KVStoreController.class);
 
     /**
      * Constructor for KVStoreController. 
@@ -59,11 +62,13 @@ public class KVStoreController {
         long timestamp = System.currentTimeMillis();
         if (!nodeProperties.replicationEnabled()) {
             store.put(key, value, timestamp);
+            log.info("[LOCAL] PUT key={} to node={}", key, nodeProperties.nodeId());
             return ResponseEntity.ok().build();
         }
         for (Node node: hashRing.getReplicaNodes(key, nodeProperties.replicationFactor())) {
             if (node.id().equals(nodeProperties.nodeId())) {
                 store.put(key, value, timestamp);
+                log.info("[GRPC] PUT key={} to node={}", key, node.id());
             } else {
                 replicationClient.replicatePut(node, key, value, timestamp);
             }
@@ -82,8 +87,8 @@ public class KVStoreController {
     ) {
         var replicas = hashRing.getReplicaNodes(key, nodeProperties.replicationFactor());
         StoredValue local = store.get(key);
-        System.out.println("ID " + nodeProperties.nodeId());
         if (local != null) {
+            log.info("[LOCAL] GET key={} value={} node={}", key, local.value(), nodeProperties.nodeId());
             return ResponseEntity.ok(local);
         }
         for (Node node : replicas) {
@@ -92,10 +97,11 @@ public class KVStoreController {
             }
             StoredValue remote = replicationClient.getValue(node, key);
             if (remote != null) {
+                log.info("[GRPC] GET key={} value={} node={}", key, remote.value(), node.id());
                 return ResponseEntity.ok(remote);
             }
         }
-        System.out.println("Value not found");
+        log.error("GET: Value Not Found");
         return ResponseEntity.notFound().build();
     }
 

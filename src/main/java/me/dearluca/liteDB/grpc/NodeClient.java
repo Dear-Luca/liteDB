@@ -3,7 +3,10 @@ package me.dearluca.liteDB.grpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import me.dearluca.liteDB.cluster.Node;
+import me.dearluca.liteDB.controller.KVStoreController;
 import me.dearluca.liteDB.store.StoredValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,6 +14,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class NodeClient {
+    private static final Logger log = LoggerFactory.getLogger(NodeClient.class);
+
+
     /**
      * Replicates a put operation to another node.
      * @param targetNode the node to replicate to
@@ -37,7 +43,7 @@ public class NodeClient {
             ReplicateResponse response = stub.replicatePut(request);
 
             if (!response.getSuccess()) {
-                throw new RuntimeException("Replication failed: " + response.getMessage());
+                log.error("[GRPC] PUT: {}", response.getMessage());
             }
 
         } finally {
@@ -67,7 +73,7 @@ public class NodeClient {
             GetValueResponse response = stub.getValue(request);
 
             if (!response.getSuccess()) {
-                System.out.println("GET VALUE FAILED: " + response.getMessage());
+                log.error("[GRPC] GET: {}", response.getMessage());
                 return null;
             }
 
