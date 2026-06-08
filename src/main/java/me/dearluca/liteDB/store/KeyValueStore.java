@@ -40,10 +40,12 @@ public class KeyValueStore {
 
     /**
      * Deletes the key-value pair associated with the given key.
+     *
      * @param key the key to delete
+     * @return true if value is deleted, false otherwise
      */
-    public void delete(String key) {
-        store.remove(key);
+    public boolean delete(String key) {
+        return store.remove(key) != null;
     }
 
     /**

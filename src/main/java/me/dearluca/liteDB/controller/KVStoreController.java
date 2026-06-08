@@ -115,10 +115,9 @@ public class KVStoreController {
     public ResponseEntity<Void> delete(
             @PathVariable String key
     ) {
-        if (store.get(key) == null) {
+        if(!store.delete(key)) {
             return ResponseEntity.notFound().build();
         }
-        store.delete(key);
         return ResponseEntity.ok().build();
     }
 }
