@@ -67,9 +67,10 @@ public class KVStoreController {
         }
         for (Node node: hashRing.getReplicaNodes(key, nodeProperties.replicationFactor())) {
             if (node.id().equals(nodeProperties.nodeId())) {
+                log.info("[LOCAL] PUT key={} to node={}", key, nodeProperties.nodeId());
                 store.put(key, value, timestamp);
-                log.info("[GRPC] PUT key={} to node={}", key, node.id());
             } else {
+                log.info("[GRPC] PUT key={} to node={}", key, node.id());
                 replicationClient.replicatePut(node, key, value, timestamp);
             }
         }
