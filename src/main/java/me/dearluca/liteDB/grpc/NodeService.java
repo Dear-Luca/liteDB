@@ -1,6 +1,7 @@
 package me.dearluca.liteDB.grpc;
 
 import io.grpc.stub.StreamObserver;
+import me.dearluca.liteDB.cluster.NodeProperties;
 import me.dearluca.liteDB.store.KeyValueStore;
 import me.dearluca.liteDB.store.StoredValue;
 import org.springframework.grpc.server.service.GrpcService;
@@ -11,13 +12,15 @@ import org.springframework.grpc.server.service.GrpcService;
 @GrpcService
 public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
     private final KeyValueStore store;
+    private final NodeProperties nodeProperties;
 
     /**
      * Creates a new NodeService with the given KeyValueStore.
      * @param store the KeyValueStore to use for storing replicated data
      */
-    public NodeService(KeyValueStore store) {
+    public NodeService(KeyValueStore store, NodeProperties nodeProperties) {
         this.store = store;
+        this.nodeProperties = nodeProperties;
     }
 
     /**
@@ -30,6 +33,12 @@ public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
             ReplicatePutRequest request,
             StreamObserver<ReplicateResponse> responseObserver
     ) {
+        System.out.println(
+                "Node " + nodeProperties.nodeId()
+                        + " received PUT for key="
+                        + request.getKey()
+        );
+
         store.put(
                 request.getKey(),
                 request.getValue(),
@@ -55,6 +64,12 @@ public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
             GetValueRequest request,
             StreamObserver<GetValueResponse> responseObserver
     ) {
+        System.out.println(
+                "Node " + nodeProperties.nodeId()
+                        + " received GET for key="
+                        + request.getKey()
+        );
+
         StoredValue storedValue = store.get(request.getKey());
         if (storedValue == null) {
             responseObserver.onNext(

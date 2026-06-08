@@ -67,7 +67,8 @@ public class NodeClient {
             GetValueResponse response = stub.getValue(request);
 
             if (!response.getSuccess()) {
-                throw new RuntimeException("Get value failed: " + response.getMessage());
+                System.out.println("GET VALUE FAILED: " + response.getMessage());
+                return null;
             }
 
             return new StoredValue(response.getValue(), response.getTimestamp());
