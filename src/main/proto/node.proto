@@ -4,18 +4,18 @@ option java_package = "me.dearluca.liteDB.grpc";
 option java_multiple_files = true;
 
 service NodeService {
-  rpc ReplicatePut(ReplicatePutRequest) returns (ReplicateResponse);
+  rpc ReplicatePut(PutRequest) returns (PutResponse);
   rpc GetValue(GetValueRequest) returns (GetValueResponse);
   rpc ReplicateDelete(DeleteKeyRequest) returns (DeleteKeyResponse);
 }
 
-message ReplicatePutRequest {
+message PutRequest {
   string key = 1;
   string value = 2;
   int64 timestamp = 3;
 }
 
-message ReplicateResponse {
+message PutResponse {
   bool success = 1;
   string message = 2;
 }
