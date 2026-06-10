@@ -18,5 +18,6 @@ public record NodeProperties(
         String nodeId,
         int grpcPort,
         int replicationFactor,
-        boolean replicationEnabled, List<Node> nodes
+        boolean replicationEnabled,
+        List<Node> nodes
 ){}
