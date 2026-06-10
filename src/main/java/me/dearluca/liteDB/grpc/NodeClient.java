@@ -3,6 +3,7 @@ package me.dearluca.liteDB.grpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import me.dearluca.liteDB.cluster.Node;
+import me.dearluca.liteDB.cluster.NodeProperties;
 import me.dearluca.liteDB.controller.KVStoreController;
 import me.dearluca.liteDB.store.StoredValue;
 import org.slf4j.Logger;
@@ -15,6 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class NodeClient {
     private static final Logger log = LoggerFactory.getLogger(NodeClient.class);
+    private final NodeProperties nodeProperties;
+
+    public NodeClient(NodeProperties nodeProperties) {
+        this.nodeProperties = nodeProperties;
+    }
 
     /**
      * Replicates a put operation to another node.
@@ -109,21 +115,24 @@ public class NodeClient {
         return true;
     }
 
-    public boolean heartbeat(Node node) {
+    public boolean heartbeat(Node targetNode) {
         ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(node.host(), node.port())
+                .forAddress(targetNode.host(), targetNode.port())
                 .usePlaintext()
                 .build();
         try {
             NodeServiceGrpc.NodeServiceBlockingStub stub =
                     NodeServiceGrpc.newBlockingStub(channel);
             HeartbeatRequest request = HeartbeatRequest.newBuilder()
-                    .setNodeId(node.id())
+                    .setNodeId(nodeProperties.nodeId())
                     .build();
             HeartbeatResponse response = stub.heartbeat(request);
             return response.getIsAlive();
         } catch (Exception e) {
             return false;
+        }
+        finally {
+            channel.shutdown();
         }
     }
 }
