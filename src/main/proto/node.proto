@@ -7,7 +7,7 @@ service NodeService {
   rpc ReplicatePut(PutRequest) returns (PutResponse);
   rpc GetValue(GetValueRequest) returns (GetValueResponse);
   rpc ReplicateDelete(DeleteKeyRequest) returns (DeleteKeyResponse);
-  rpc HeartBeat(HeartBeatRequest) returns (HeartBeatResponse);
+  rpc Heartbeat(HeartbeatRequest) returns (HeartbeatResponse);
 }
 
 message PutRequest {
@@ -42,10 +42,10 @@ message DeleteKeyResponse {
   string message = 3;
 }
 
-message HeartBeatRequest {
+message HeartbeatRequest {
   string nodeId = 1;
 }
 
-message HeartBeatResponse {
+message HeartbeatResponse {
   bool isAlive = 1;
 }

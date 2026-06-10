@@ -111,4 +111,15 @@ public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
         );
         responseObserver.onCompleted();
     }
+
+    @Override
+    public void heartbeat(HeartbeatRequest request, StreamObserver<HeartbeatResponse> responseObserver) {
+        log.info("[GRPC]: HEARTBEAT from {}", request.getNodeId());
+        responseObserver.onNext(
+            HeartbeatResponse.newBuilder()
+                    .setIsAlive(true)
+                    .build()
+        );
+        responseObserver.onCompleted();
+    }
 }

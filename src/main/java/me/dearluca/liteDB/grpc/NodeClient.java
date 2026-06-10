@@ -108,4 +108,22 @@ public class NodeClient {
         }
         return true;
     }
+
+    public boolean heartbeat(Node node) {
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress(node.host(), node.port())
+                .usePlaintext()
+                .build();
+        try {
+            NodeServiceGrpc.NodeServiceBlockingStub stub =
+                    NodeServiceGrpc.newBlockingStub(channel);
+            HeartbeatRequest request = HeartbeatRequest.newBuilder()
+                    .setNodeId(node.id())
+                    .build();
+            HeartbeatResponse response = stub.heartbeat(request);
+            return response.getIsAlive();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
