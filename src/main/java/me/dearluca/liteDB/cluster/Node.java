@@ -9,7 +9,7 @@ public final class Node {
     private final String id;
     private final String host;
     private final int port;
-    private NodeStatus nodeStatus = NodeStatus.UP;
+    private volatile NodeStatus nodeStatus = NodeStatus.UP;
 
     /**
      * @param id   the unique identifier of the node.
