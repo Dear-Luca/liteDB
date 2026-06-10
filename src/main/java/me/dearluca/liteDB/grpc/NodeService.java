@@ -35,8 +35,8 @@ public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
      */
     @Override
     public void replicatePut(
-            ReplicatePutRequest request,
-            StreamObserver<ReplicateResponse> responseObserver
+            PutRequest request,
+            StreamObserver<PutResponse> responseObserver
     ) {
         log.info("[GRPC]: Node {} received PUT for key={}", nodeProperties.nodeId(), request.getKey());
         store.put(
@@ -45,7 +45,7 @@ public class NodeService extends NodeServiceGrpc.NodeServiceImplBase {
                 request.getTimestamp()
         );
 
-        ReplicateResponse response = ReplicateResponse.newBuilder()
+        PutResponse response = PutResponse.newBuilder()
                 .setSuccess(true)
                 .setMessage("Replica stored")
                 .build();

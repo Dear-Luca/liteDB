@@ -33,13 +33,13 @@ public class NodeClient {
             NodeServiceGrpc.NodeServiceBlockingStub stub =
                     NodeServiceGrpc.newBlockingStub(channel);
 
-            ReplicatePutRequest request = ReplicatePutRequest.newBuilder()
+            PutRequest request = PutRequest.newBuilder()
                     .setKey(key)
                     .setValue(value)
                     .setTimestamp(timestamp)
                     .build();
 
-            ReplicateResponse response = stub.replicatePut(request);
+            PutResponse response = stub.replicatePut(request);
 
             if (!response.getSuccess()) {
                 log.error("[GRPC] PUT: {}", response.getMessage());
