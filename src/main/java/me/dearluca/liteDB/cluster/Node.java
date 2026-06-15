@@ -26,15 +26,15 @@ public final class Node {
         this.port = port;
     }
 
-    public String id() {
+    public String getId() {
         return id;
     }
 
-    public String host() {
+    public String getHost() {
         return host;
     }
 
-    public int port() {
+    public int getPort() {
         return port;
     }
 

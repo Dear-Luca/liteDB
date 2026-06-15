@@ -24,18 +24,18 @@ public class HeartbeatScheduler {
     @Scheduled(fixedRate = HEARTBEAT_RATE)
     public void heartbeat() {
         for (Node node: nodeProperties.nodes()) {
-            if (node.id().equals(nodeProperties.nodeId())) {
+            if (node.getId().equals(nodeProperties.nodeId())) {
                 continue;
             }
-            log.info("[GRPC] HEARTBEAT to {}", node.id());
+            log.info("[GRPC] HEARTBEAT to {}", node.getId());
             boolean isAlive = replicationClient.heartbeat(node);
-            log.info("[GRPC] HEARTBEAT result node={} alive={}", node.id(), isAlive);
+            log.info("[GRPC] HEARTBEAT result node={} alive={}", node.getId(), isAlive);
             if (!isAlive && node.getNodeStatus() == NodeStatus.UP) {
                 node.setNodeStatus(NodeStatus.DOWN);
-                log.warn("Node {} changed state: UP -> DOWN", node.id());
+                log.warn("Node {} changed state: UP -> DOWN", node.getId());
             } else if (isAlive && node.getNodeStatus() == NodeStatus.DOWN) {
                 node.setNodeStatus(NodeStatus.UP);
-                log.info("Node {} changed state: DOWN -> UP", node.id());
+                log.info("Node {} changed state: DOWN -> UP", node.getId());
             }
         }
     }

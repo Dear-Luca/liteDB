@@ -4,7 +4,6 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import me.dearluca.liteDB.cluster.Node;
 import me.dearluca.liteDB.cluster.NodeProperties;
-import me.dearluca.liteDB.controller.KVStoreController;
 import me.dearluca.liteDB.store.StoredValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +30,7 @@ public class NodeClient {
      */
     public void replicatePut(Node targetNode, String key, String value, long timestamp) {
         ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(targetNode.host(), targetNode.port())
+                .forAddress(targetNode.getHost(), targetNode.getPort())
                 .usePlaintext()
                 .build();
 
@@ -64,7 +63,7 @@ public class NodeClient {
      */
     public StoredValue getValue(Node targetNode, String key) {
         ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(targetNode.host(), targetNode.port())
+                .forAddress(targetNode.getHost(), targetNode.getPort())
                 .usePlaintext()
                 .build();
         try {
@@ -91,7 +90,7 @@ public class NodeClient {
 
     public boolean replicateDelete(Node targetNode, String key) {
         ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(targetNode.host(), targetNode.port())
+                .forAddress(targetNode.getHost(), targetNode.getPort())
                 .usePlaintext()
                 .build();
         try {
@@ -117,7 +116,7 @@ public class NodeClient {
 
     public boolean heartbeat(Node targetNode) {
         ManagedChannel channel = ManagedChannelBuilder
-                .forAddress(targetNode.host(), targetNode.port())
+                .forAddress(targetNode.getHost(), targetNode.getPort())
                 .usePlaintext()
                 .build();
         try {

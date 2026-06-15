@@ -22,7 +22,7 @@ public class ConsistentHashing {
      */
     public ConsistentHashing(NodeProperties nodeProperties) {
         for (Node node : nodeProperties.nodes()) {
-            ring.put(hash(node.id()), node);
+            ring.put(hash(node.getId()), node);
         }
     }
 

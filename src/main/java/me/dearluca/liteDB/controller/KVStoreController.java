@@ -66,11 +66,11 @@ public class KVStoreController {
             return ResponseEntity.ok().build();
         }
         for (Node node: hashRing.getReplicaNodes(key, nodeProperties.replicationFactor())) {
-            if (node.id().equals(nodeProperties.nodeId())) {
+            if (node.getId().equals(nodeProperties.nodeId())) {
                 log.info("[LOCAL] PUT key={} to node={}", key, nodeProperties.nodeId());
                 store.put(key, value, timestamp);
             } else {
-                log.info("[GRPC] PUT key={} to node={}", key, node.id());
+                log.info("[GRPC] PUT key={} to node={}", key, node.getId());
                 replicationClient.replicatePut(node, key, value, timestamp);
             }
         }
@@ -93,12 +93,12 @@ public class KVStoreController {
             return ResponseEntity.ok(local);
         }
         for (Node node : replicas) {
-            if (node.id().equals(nodeProperties.nodeId())) {
+            if (node.getId().equals(nodeProperties.nodeId())) {
                 continue;
             }
             StoredValue remote = replicationClient.getValue(node, key);
             if (remote != null) {
-                log.info("[GRPC] GET key={} value={} node={}", key, remote.value(), node.id());
+                log.info("[GRPC] GET key={} value={} node={}", key, remote.value(), node.getId());
                 return ResponseEntity.ok(remote);
             }
         }
@@ -126,7 +126,7 @@ public class KVStoreController {
 
         for (Node node : hashRing.getReplicaNodes(key, nodeProperties.replicationFactor())) {
             try {
-                if (node.id().equals(nodeProperties.nodeId())) {
+                if (node.getId().equals(nodeProperties.nodeId())) {
                     boolean deleted = store.delete(key);
                     if (deleted) {
                         deletedAtLeastOnce = true;
@@ -136,11 +136,11 @@ public class KVStoreController {
                     boolean deleted = replicationClient.replicateDelete(node, key);
                     if (deleted) {
                         deletedAtLeastOnce = true;
-                        log.info("[GRPC] DELETE key={} on node={}", key, node.id());
+                        log.info("[GRPC] DELETE key={} on node={}", key, node.getId());
                     }
                 }
             } catch (Exception e) {
-                log.warn("DELETE: Failed to delete key={} from node={}", key, node.id(), e);
+                log.warn("DELETE: Failed to delete key={} from node={}", key, node.getId(), e);
             }
         }
         return deletedAtLeastOnce ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
