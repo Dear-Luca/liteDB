@@ -31,6 +31,15 @@ public class NodeController {
     }
 
     /**
+     * Get the list of nodes.
+     * @return the list of the nodes.
+     */
+    @GetMapping("/nodes")
+    public ResponseEntity<List<Node>> nodes() {
+        return ResponseEntity.ok(nodeProperties.nodes());
+    }
+
+    /**
      * Get the current hash ring information.
      * @return a map of node IDs to Node objects representing the hash ring.
      */
